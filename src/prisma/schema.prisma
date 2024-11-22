@@ -1,0 +1,69 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  name          String?
+  role          Role      @default(USER)
+  investments   Investment[]
+  walletAddresses WalletAddress[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Investment {
+  id            String    @id @default(cuid())
+  type          InvestmentType
+  amount        Float
+  returnAmount  Float
+  status        InvestmentStatus @default(PENDING)
+  startDate     DateTime?
+  endDate       DateTime?
+  userId        String
+  user          User      @relation(fields: [userId], references: [id])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model WalletAddress {
+  id            String    @id @default(cuid())
+  type          WalletType
+  address       String
+  userId        String
+  user          User      @relation(fields: [userId], references: [id])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum InvestmentType {
+  BASIC
+  PRO
+  ELITE
+}
+
+enum InvestmentStatus {
+  PENDING
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum WalletType {
+  BTC
+  ETH
+  USDT_TRC20
+  SOL
+}
