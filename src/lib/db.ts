@@ -1,10 +1,19 @@
+import mongoose from 'mongoose';
 
-import { PrismaClient } from '@prisma/client';
+const MONGODB_URI = process.env.MONGODB_URI!;
 
+let cached = global.mongoose;
 
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
 
-const prisma = new PrismaClient();
+export async function connectDB() {
+  if (cached.conn) return cached.conn;
 
-
-
-export default prisma;
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(MONGODB_URI);
+  }
+  cached.conn = await cached.promise;
+  return cached.conn;
+}
