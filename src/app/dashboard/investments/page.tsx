@@ -1,87 +1,125 @@
 // src/app/dashboard/investments/page.tsx
 'use client'
 
-import { useState, useEffect } from 'react'
-import { BanknotesIcon, ArrowTrendingUpIcon } from '@heroicons/react/24/outline'
+import { useState } from 'react'
+import { InvestmentModal } from '@/components/dashboard/InvestmentModal'
+import { InvestmentConfirmation } from '@/components/dashboard/InvestmentConfirmation'
 
-const PLANS = [
-  { name: 'Basic', min: 100, duration: 30, return: 50 },
-  { name: 'Pro', min: 500, duration: 20, return: 50 },
-  { name: 'Elite', min: 1000, duration: 10, return: 50 }
+const INVESTMENT_PLANS = [
+  { 
+    name: 'Basic',
+    min: 100,
+    duration: 30,
+    return: 50,
+    features: [
+      '$100 minimum investment',
+      '30 days duration',
+      '50% return rate',
+      '24/7 Support'
+    ]
+  },
+  {
+    name: 'Pro',
+    min: 500,
+    duration: 20,
+    return: 50,
+    features: [
+      '$500 minimum investment',
+      '20 days duration',
+      '50% return rate',
+      'Priority Support'
+    ]
+  },
+  {
+    name: 'Elite',
+    min: 1000,
+    duration: 10,
+    return: 50,
+    features: [
+      '$1000 minimum investment',
+      '10 days duration',
+      '50% return rate',
+      'VIP Support'
+    ]
+  }
 ]
 
 export default function InvestmentsPage() {
-  const [investments, setInvestments] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [selectedPlan, setSelectedPlan] = useState(null)
+  const [showPaymentModal, setShowPaymentModal] = useState(false)
+  const [currentInvestment, setCurrentInvestment] = useState(null)
 
-  useEffect(() => {
-    fetchInvestments()
-  }, [])
-
-  async function fetchInvestments() {
-    const res = await fetch('/api/investments')
-    const data = await res.json()
-    setInvestments(data)
-    setLoading(false)
+  const handleInvestmentComplete = (investment: any) => {
+    setSelectedPlan(null)
+    setCurrentInvestment(investment)
+    setShowPaymentModal(true)
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Investments</h1>
-        <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
-          New Investment
-        </button>
-      </div>
-
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-6">Investment Plans</h1>
+      
       <div className="grid md:grid-cols-3 gap-6">
-        {PLANS.map((plan) => (
-          <div key={plan.name} className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold mb-4">{plan.name}</h3>
-            <div className="space-y-2">
-              <p>Minimum: ${plan.min}</p>
-              <p>Duration: {plan.duration} days</p>
-              <p>Return: {plan.return}%</p>
+        {INVESTMENT_PLANS.map((plan) => (
+          <div 
+            key={plan.name}
+            className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
+          >
+            <div className="text-center mb-6">
+              <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
+              <p className="text-3xl font-bold text-blue-600">
+                ${plan.min}
+                <span className="text-sm text-gray-500 font-normal">minimum</span>
+              </p>
             </div>
-          </div>
-        ))}
-      </div>
 
-      <div className="bg-white rounded-lg shadow">
-        <div className="p-6">
-          <h2 className="text-lg font-semibold mb-4">Active Investments</h2>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead>
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Plan</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Start Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Returns</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {investments.map((investment: any) => (
-                  <tr key={investment._id}>
-                    <td className="px-6 py-4">{investment.plan}</td>
-                    <td className="px-6 py-4">${investment.amount}</td>
-                    <td className="px-6 py-4">{new Date(investment.startDate).toLocaleDateString()}</td>
-                    <td className="px-6 py-4">
-                      <span className={`px-2 py-1 rounded-full text-xs ${
-                        investment.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                      }`}>
-                        {investment.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">${investment.returns}</td>
-                  </tr>
+            <ul className="space-y-3 mb-6">
+              {plan.features.map((feature, index) => (
+                <li key={index} className="flex items-center text-gray-600">
+                  <svg 
+                    className="w-5 h-5 mr-2 text-green-500" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth={2} 
+                      d="M5 13l4 4L19 7" 
+                    />
+                  </svg>
+                  {feature}
+                </li>
                 ))}
-              </tbody>
-            </table>
+                </ul>
+    
+                <button
+                  onClick={() => setSelectedPlan(plan)}
+                  className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                >
+                  Invest Now
+                </button>
+              </div>
+            ))}
           </div>
-        </div>
-      </div>
+    
+          {selectedPlan && (
+            <InvestmentModal
+              isOpen={!!selectedPlan}
+              onClose={() => setSelectedPlan(null)}
+              plan={selectedPlan}
+              onInvestmentComplete={handleInvestmentComplete}
+            />
+          )}
+
+{showPaymentModal && currentInvestment && (
+        <InvestmentConfirmation
+          isOpen={showPaymentModal}
+          onClose={() => setShowPaymentModal(false)}
+          investment={currentInvestment}
+        />
+      )}
     </div>
   )
 }

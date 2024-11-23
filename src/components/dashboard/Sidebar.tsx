@@ -3,21 +3,23 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import {
   HomeIcon,
-  BanknotesIcon,
+  CurrencyDollarIcon,
   WalletIcon,
+  UserIcon,
   Cog6ToothIcon,
-  ChartBarIcon,
   ArrowLeftOnRectangleIcon,
+  ChartBarIcon,
+  ComputerDesktopIcon
 } from '@heroicons/react/24/outline'
 
 const navigation = [
-  { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
-  { name: 'Investments', href: '/dashboard/investments', icon: BanknotesIcon },
-  { name: 'Wallet', href: '/dashboard/wallet', icon: WalletIcon },
+  { name: 'Overview', href: '/dashboard', icon: HomeIcon },
+  { name: 'Investments', href: '/dashboard/investments', icon: CurrencyDollarIcon },
   { name: 'Statistics', href: '/dashboard/statistics', icon: ChartBarIcon },
+  { name: 'Profile', href: '/dashboard/profile', icon: UserIcon },
   { name: 'Settings', href: '/dashboard/settings', icon: Cog6ToothIcon },
 ]
 
@@ -30,7 +32,10 @@ export function Sidebar() {
       <div className="flex min-h-0 flex-1 flex-col bg-gray-900">
         <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
           <div className="flex flex-shrink-0 items-center px-4">
-            <span className="text-xl font-bold text-white">Mining Dashboard</span>
+            <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center">
+              <span className="text-white font-bold">M</span>
+            </div>
+            <span className="ml-2 text-xl font-bold text-white">Mining</span>
           </div>
           <nav className="mt-5 flex-1 space-y-1 px-2">
             {navigation.map((item) => {
@@ -39,7 +44,7 @@ export function Sidebar() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
+                  className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors ${
                     isActive
                       ? 'bg-gray-800 text-white'
                       : 'text-gray-300 hover:bg-gray-700 hover:text-white'
@@ -68,9 +73,13 @@ export function Sidebar() {
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-white">{session?.user?.name}</p>
-                <p className="text-xs font-medium text-gray-300 group-hover:text-gray-200">
-                  <Link href="/dashboard/profile">View profile</Link>
-                </p>
+                <button
+                  onClick={() => signOut({ callbackUrl: '/' })}
+                  className="text-xs font-medium text-gray-300 group-hover:text-gray-200 flex items-center"
+                >
+                  <ArrowLeftOnRectangleIcon className="h-4 w-4 mr-1" />
+                  Sign out
+                </button>
               </div>
             </div>
           </div>
