@@ -32,7 +32,8 @@ export default function PendingPayments() {
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-6">Pending Payment Verifications</h1>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="overflow-x-auto -mx-4 sm:mx-0">
+  <div className="inline-block min-w-full align-middle">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -70,6 +71,7 @@ export default function PendingPayments() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   )

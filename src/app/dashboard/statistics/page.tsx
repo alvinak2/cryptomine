@@ -2,7 +2,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Line, Doughnut } from 'react-chartjs-2'
+import { LineChart, DoughnutChart } from '@/components/dashboard/Charts'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -125,15 +125,15 @@ export default function StatisticsPage() {
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold mb-4">Monthly Returns</h3>
-          <Line data={lineChartData} />
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold mb-4">Investment Distribution</h3>
-          <Doughnut data={doughnutData} />
-        </div>
-      </div>
+  <LineChart 
+    data={lineChartData} 
+    title="Monthly Returns" 
+  />
+  <DoughnutChart 
+    data={doughnutData} 
+    title="Investment Distribution" 
+  />
+</div>
     </div>
   )
 }

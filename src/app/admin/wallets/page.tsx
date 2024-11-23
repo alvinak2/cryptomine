@@ -128,7 +128,8 @@ export default function WalletsManagement() {
       </div>
 
       {/* Existing Wallets Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="overflow-x-auto -mx-4 sm:mx-0">
+  <div className="inline-block min-w-full align-middle">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -185,6 +186,7 @@ export default function WalletsManagement() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   )
