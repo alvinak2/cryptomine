@@ -1,11 +1,11 @@
 // src/app/api/auth/[...nextauth]/route.ts
-import NextAuth from 'next-auth'
+import NextAuth, { AuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import bcrypt from 'bcryptjs'
 import { connectDB } from '@/lib/db'
 import { User } from '@/models/user'
 
-export const authOptions = {
+export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       credentials: {
@@ -13,15 +13,22 @@ export const authOptions = {
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null
-        
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error('Please provide all required fields')
+        }
+
         await connectDB()
         const user = await User.findOne({ email: credentials.email })
-        if (!user) return null
         
+        if (!user) {
+          throw new Error('Invalid credentials')
+        }
+
         const isValid = await bcrypt.compare(credentials.password, user.password)
-        if (!isValid) return null
-        
+        if (!isValid) {
+          throw new Error('Invalid credentials')
+        }
+
         return {
           id: user._id.toString(),
           email: user.email,
@@ -35,20 +42,26 @@ export const authOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.role = user.role
+        token.id = user.id
       }
       return token
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.role = token.role
+        session.user.id = token.id
       }
       return session
     }
   },
   pages: {
     signIn: '/login',
+    signOut: '/'
+  },
+  session: {
+    strategy: 'jwt',
   }
 }
 
 const handler = NextAuth(authOptions)
-export { handler as GET, handler as POST }
+export { handler as GET, handler as POST}

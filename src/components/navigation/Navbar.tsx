@@ -3,6 +3,7 @@
 
 import Link from 'next/link'
 import { useSession, signOut } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 import { Menu, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
 import { UserCircleIcon } from '@heroicons/react/24/outline'
@@ -81,18 +82,25 @@ export default function Navbar() {
                     leaveTo="transform opacity-0 scale-95"
                   >
                     <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right bg-gray-800 rounded-md shadow-lg py-1">
-                      <Menu.Item>
-                        {({ active }) => (
-                          <button
-                            onClick={() => signOut()}
-                            className={`${
-                              active ? 'bg-gray-700' : ''
-                            } block w-full text-left px-4 py-2 text-sm`}
-                          >
-                            Sign Out
-                          </button>
-                        )}
-                      </Menu.Item>
+                    <Menu.Item>
+  {({ active }) => (
+    <button
+      onClick={() => {
+        signOut({
+          callbackUrl: '/',
+          redirect: true
+        }).catch(error => {
+          console.error('Sign out error:', error)
+        })
+      }}
+      className={`${
+        active ? 'bg-gray-700' : ''
+      } block w-full text-left px-4 py-2 text-sm text-gray-300 hover:text-white`}
+    >
+      Sign Out
+    </button>
+  )}
+</Menu.Item>
                     </Menu.Items>
                   </Transition>
                 </Menu>

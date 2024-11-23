@@ -1,4 +1,4 @@
-// src/app/api/wallet/balance/route.ts
+// src/app/api/investments/active/route.ts
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { connectDB } from '@/lib/db'
@@ -12,17 +12,19 @@ export async function GET(req: Request) {
     await connectDB()
     const user = await User.findOne({ email: session.user.email })
     
-    // Mock wallet balances - in production, integrate with real crypto APIs
-    const balances = {
-      btc: Math.random() * 1,
-      eth: Math.random() * 10,
-      usdt: Math.random() * 1000,
-      sol: Math.random() * 100
-    }
+    const activeInvestments = user.investments.filter(
+      (inv: any) => inv.status === 'active'
+    )
 
-    return new Response(JSON.stringify(balances), {
+    return new Response(JSON.stringify({
+      hasActive: activeInvestments.length > 0,
+      activeInvestments,
+      totalInvested: activeInvestments.reduce((sum: number, inv: any) => sum + inv.amount, 0),
+      currentReturns: activeInvestments.reduce((sum: number, inv: any) => sum + inv.returns, 0)
+    }), {
       headers: { 'Content-Type': 'application/json' }
     })
+
   } catch (error) {
     return new Response('Internal Server Error', { status: 500 })
   }

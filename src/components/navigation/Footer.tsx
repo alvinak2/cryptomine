@@ -1,35 +1,42 @@
 // src/components/navigation/Footer.tsx
 export default function Footer() {
-    return (
-      <footer className="bg-gradient-to-r from-gray-900 to-gray-800 text-white">
-        <div className="container mx-auto px-4 py-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <h3 className="text-lg font-semibold mb-4">About Us</h3>
-              <p className="text-gray-400">
-                Professional mining investment platform providing secure and profitable solutions.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-              <ul className="space-y-2">
-                <li><a href="/terms" className="text-gray-400 hover:text-white transition">Terms & Conditions</a></li>
-                <li><a href="/privacy" className="text-gray-400 hover:text-white transition">Privacy Policy</a></li>
-                <li><a href="/contact" className="text-gray-400 hover:text-white transition">Contact Us</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Contact</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li>Email: support@mininginvestment.com</li>
-                <li>24/7 Customer Support</li>
-              </ul>
-            </div>
+  return (
+    <footer className="bg-gray-900 text-gray-400 py-4">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+          <div>
+            <h3 className="font-semibold mb-2">About</h3>
+            <ul className="space-y-1">
+              <li><a href="/about" className="hover:text-white">About Us</a></li>
+              <li><a href="/contact" className="hover:text-white">Contact</a></li>
+            </ul>
           </div>
-          <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; {new Date().getFullYear()} Mining Investment. All rights reserved.</p>
+          <div>
+            <h3 className="font-semibold mb-2">Legal</h3>
+            <ul className="space-y-1">
+              <li><a href="/terms" className="hover:text-white">Terms</a></li>
+              <li><a href="/privacy" className="hover:text-white">Privacy</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="font-semibold mb-2">Support</h3>
+            <ul className="space-y-1">
+              <li><a href="/faq" className="hover:text-white">FAQ</a></li>
+              <li><a href="/help" className="hover:text-white">Help Center</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="font-semibold mb-2">Connect</h3>
+            <ul className="space-y-1">
+              <li><a href="#" className="hover:text-white">Twitter</a></li>
+              <li><a href="#" className="hover:text-white">Telegram</a></li>
+            </ul>
           </div>
         </div>
-      </footer>
-    )
-  }
+        <div className="text-center mt-4 text-xs">
+          © {new Date().getFullYear()} Mining Investment. All rights reserved.
+        </div>
+      </div>
+    </footer>
+  )
+}
