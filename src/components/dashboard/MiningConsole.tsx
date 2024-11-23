@@ -85,9 +85,9 @@ export function MiningConsole() {
       </div>
 
       <div 
-        ref={consoleRef}
-        className="h-64 overflow-y-auto font-mono text-sm bg-gray-950 rounded p-4"
-      >
+  ref={consoleRef}
+  className="h-48 sm:h-64 overflow-y-auto font-mono text-xs sm:text-sm bg-gray-950 rounded p-2 sm:p-4"
+>
         {logs.map((log, i) => (
           <div 
             key={i} 

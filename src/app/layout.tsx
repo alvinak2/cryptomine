@@ -4,25 +4,7 @@ import { SessionProvider } from '@/components/providers/SessionProvider'
 import Navbar from '@/components/navigation/Navbar'
 import Footer from '@/components/navigation/Footer'
 import './globals.css'
-
-import type { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: {
-    default: 'Mining Investment Platform',
-    template: '%s | Mining Investment'
-  },
-  description: 'Professional cryptocurrency mining investment platform',
-  keywords: ['mining', 'investment', 'cryptocurrency', 'bitcoin', 'ethereum'],
-  authors: [{ name: 'Mining Investment Team' }],
-  openGraph: {
-    title: 'Mining Investment Platform',
-    description: 'Professional cryptocurrency mining investment platform',
-    url: 'https://mininginvestment.com',
-    siteName: 'Mining Investment',
-    type: 'website'
-  }
-}
+import { Sidebar } from '@/components/dashboard/Sidebar'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -33,16 +15,29 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="h-full">
-      <body className={`${inter.className} min-h-full flex flex-col bg-gray-50`}>
-        <div className="fixed inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
+      <body className={`${inter.className} h-full bg-gray-50`}>
         <SessionProvider>
-          <Navbar />
-          <main className="flex-grow container mx-auto px-4 py-8">
-            <div className="max-w-7xl mx-auto">
-              {children}
+          <div className="flex h-full">
+            {/* Mobile menu button */}
+            <div className="lg:hidden fixed inset-0 z-40 flex">
+              <button className="p-4">
+                <span className="sr-only">Open sidebar</span>
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
             </div>
-          </main>
-          <Footer />
+            {/* Main content */}
+            <div className="flex flex-1 flex-col overflow-hidden">
+              <Navbar />
+              <main className="flex-1 overflow-y-auto">
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                  {children}
+                </div>
+              </main>
+              <Footer />
+            </div>
+          </div>
         </SessionProvider>
       </body>
     </html>
