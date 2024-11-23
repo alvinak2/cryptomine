@@ -4,9 +4,11 @@
 import Link from 'next/link'
 import { useSession, signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import { handleLogout } from '@/lib/auth'
 import { Menu, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
 import { UserCircleIcon } from '@heroicons/react/24/outline'
+import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline'
 
 export default function Navbar() {
   const { data: session, status } = useSession()
@@ -85,20 +87,12 @@ export default function Navbar() {
                     <Menu.Item>
   {({ active }) => (
     <button
-      onClick={() => {
-        signOut({
-          callbackUrl: '/',
-          redirect: true
-        }).catch(error => {
-          console.error('Sign out error:', error)
-        })
-      }}
-      className={`${
-        active ? 'bg-gray-700' : ''
-      } block w-full text-left px-4 py-2 text-sm text-gray-300 hover:text-white`}
-    >
-      Sign Out
-    </button>
+    onClick={handleLogout}
+    className="text-gray-300 hover:text-white transition-colors"
+  >
+    <ArrowLeftOnRectangleIcon className="h-4 w-4 mr-1" />
+    Sign out
+  </button>
   )}
 </Menu.Item>
                     </Menu.Items>

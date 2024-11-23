@@ -4,6 +4,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOut, useSession } from 'next-auth/react'
+import { handleLogout } from '@/lib/auth'
 import {
   HomeIcon,
   CurrencyDollarIcon,
@@ -68,12 +69,12 @@ export function Sidebar() {
                 <div className="ml-3">
                   <p className="text-sm font-medium text-white">{session?.user?.name}</p>
                   <button
-                    onClick={() => signOut({ callbackUrl: '/' })}
-                    className="text-xs font-medium text-gray-300 group-hover:text-gray-200 flex items-center"
-                  >
-                    <ArrowLeftOnRectangleIcon className="h-4 w-4 mr-1" />
-                    Sign out
-                  </button>
+  onClick={handleLogout}
+  className="text-gray-300 hover:text-white transition-colors"
+>
+  <ArrowLeftOnRectangleIcon className="h-4 w-4 mr-1" />
+  Sign out
+</button>
                 </div>
               </div>
             </div>
