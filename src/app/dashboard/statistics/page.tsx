@@ -2,62 +2,81 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { 
+import { Line, Doughnut } from 'react-chartjs-2'
+import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   PointElement,
   LineElement,
-  BarElement,
   Title,
   Tooltip,
   Legend,
-  ArcElement,
+  ArcElement
 } from 'chart.js'
-import { Line, Bar, Doughnut } from 'react-chartjs-2'
+import { StatCard } from '@/components/dashboard/StatCard'
 
 ChartJS.register(
   CategoryScale,
   LinearScale,
   PointElement,
   LineElement,
-  BarElement,
   Title,
   Tooltip,
   Legend,
   ArcElement
 )
 
+interface Stats {
+  totalInvested: number
+  totalReturns: number
+  activeInvestments: number
+  miningPower: number
+  monthlyData: Array<{
+    month: string
+    returns: number
+  }>
+  investmentDistribution: Array<number>
+}
+
 export default function StatisticsPage() {
-  const [stats, setStats] = useState({
+  const [stats, setStats] = useState<Stats>({
     totalInvested: 0,
     totalReturns: 0,
     activeInvestments: 0,
     miningPower: 0,
     monthlyData: [],
-    investmentDistribution: [],
+    investmentDistribution: []
   })
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetchStatistics()
   }, [])
 
   async function fetchStatistics() {
-    const res = await fetch('/api/statistics')
-    const data = await res.json()
-    setStats(data)
+    try {
+      const res = await fetch('/api/dashboard/statistics')
+      if (!res.ok) throw new Error('Failed to fetch statistics')
+      const data = await res.json()
+      setStats(data)
+    } catch (error) {
+      console.error('Statistics fetch error:', error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const lineChartData = {
-    labels: stats.monthlyData.map((d: any) => d.month),
+    labels: stats.monthlyData.map(d => d.month),
     datasets: [
       {
-        label: 'Investment Returns',
-        data: stats.monthlyData.map((d: any) => d.returns),
+        label: 'Monthly Returns',
+        data: stats.monthlyData.map(d => d.returns),
         borderColor: 'rgb(75, 192, 192)',
-        tension: 0.1,
-      },
-    ],
+        tension: 0.1
+      }
+    ]
   }
 
   const doughnutData = {
@@ -68,36 +87,44 @@ export default function StatisticsPage() {
         backgroundColor: [
           'rgba(255, 99, 132, 0.5)',
           'rgba(54, 162, 235, 0.5)',
-          'rgba(255, 206, 86, 0.5)',
-        ],
-      },
-    ],
+          'rgba(255, 206, 86, 0.5)'
+        ]
+      }
+    ]
+  }
+
+  if (loading) {
+    return <div className="p-6">Loading statistics...</div>
   }
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Statistics</h1>
+    <div className="p-6 space-y-6">
+      <h1 className="text-2xl font-bold">Investment Statistics</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-lg shadow">
-          <p className="text-gray-500">Total Invested</p>
-          <p className="text-2xl font-bold">${stats.totalInvested}</p>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow">
-          <p className="text-gray-500">Total Returns</p>
-          <p className="text-2xl font-bold">${stats.totalReturns}</p>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow">
-          <p className="text-gray-500">Active Investments</p>
-          <p className="text-2xl font-bold">{stats.activeInvestments}</p>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow">
-          <p className="text-gray-500">Mining Power</p>
-          <p className="text-2xl font-bold">{stats.miningPower} TH/s</p>
-        </div>
+        <StatCard
+          title="Total Invested"
+          value={`$${stats.totalInvested.toFixed(2)}`}
+          className="bg-blue-50"
+        />
+        <StatCard
+          title="Total Returns"
+          value={`$${stats.totalReturns.toFixed(2)}`}
+          className="bg-green-50"
+        />
+        <StatCard
+          title="Active Investments"
+          value={stats.activeInvestments}
+          className="bg-yellow-50"
+        />
+        <StatCard
+          title="Mining Power"
+          value={`${stats.miningPower.toFixed(2)} TH/s`}
+          className="bg-purple-50"
+        />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-6">
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-lg font-semibold mb-4">Monthly Returns</h3>
           <Line data={lineChartData} />

@@ -11,15 +11,16 @@ import {
   WalletIcon,
   ChartBarIcon,
   Cog6ToothIcon,
-  ArrowLeftOnRectangleIcon
+  ArrowLeftOnRectangleIcon,
+  BanknotesIcon
 } from '@heroicons/react/24/outline'
 
 const navigation = [
-  { name: 'Dashboard', href: '/admin', icon: HomeIcon },
+  { name: 'Overview', href: '/admin', icon: HomeIcon },
   { name: 'Users', href: '/admin/users', icon: UsersIcon },
   { name: 'Investments', href: '/admin/investments', icon: CurrencyDollarIcon },
+  { name: 'Payment Verifications', href: '/admin/payments', icon: BanknotesIcon },
   { name: 'Wallets', href: '/admin/wallets', icon: WalletIcon },
-  { name: 'Statistics', href: '/admin/statistics', icon: ChartBarIcon },
   { name: 'Settings', href: '/admin/settings', icon: Cog6ToothIcon },
 ]
 

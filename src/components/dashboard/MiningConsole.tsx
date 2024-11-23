@@ -2,63 +2,72 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { useSession } from 'next-auth/react'
+
+interface MiningLog {
+  timestamp: string
+  message: string
+  type: 'info' | 'success' | 'error'
+}
 
 export function MiningConsole() {
-  const { data: session } = useSession()
-  const [hasActiveInvestment, setHasActiveInvestment] = useState(false)
-  const [logs, setLogs] = useState<string[]>([])
+  const [logs, setLogs] = useState<MiningLog[]>([])
   const [hashRate, setHashRate] = useState(0)
+  const [isActive, setIsActive] = useState(false)
   const consoleRef = useRef<HTMLDivElement>(null)
-  const [miningStarted, setMiningStarted] = useState(false)
 
   useEffect(() => {
-    checkActiveInvestments()
+    let interval: NodeJS.Timeout
+    
+    async function checkMiningStatus() {
+      const res = await fetch('/api/mining/status')
+      const data = await res.json()
+      
+      if (data.active && !isActive) {
+        setIsActive(true)
+        startMining()
+      }
+    }
+
+    checkMiningStatus()
+    return () => clearInterval(interval)
   }, [])
 
-  async function checkActiveInvestments() {
-    const res = await fetch('/api/investments/active')
-    const data = await res.json()
-    setHasActiveInvestment(data.hasActive)
-    if (data.hasActive && !miningStarted) {
-      startMining()
-    }
-  }
-
   function startMining() {
-    setMiningStarted(true)
     const miningMessages = [
       'Initializing mining protocols...',
       'Connecting to mining pool...',
       'Verifying blockchain headers...',
       'Starting hash computation...',
-      'Mining block #1234567...',
-      'Network difficulty: 23.14T',
-      'Found new block candidate...',
-      'Validating solution...',
+      'Block candidate found...',
+      'Submitting proof of work...',
+      'Mining rewards calculated...',
     ]
 
     let index = 0
     const interval = setInterval(() => {
-      setLogs(prev => [...prev, miningMessages[index % miningMessages.length]])
-      setHashRate(prev => prev + Math.random() * 5)
-      index++
-      
+      // Add new log
+      const newLog = {
+        timestamp: new Date().toLocaleTimeString(),
+        message: miningMessages[index % miningMessages.length],
+        type: 'info' as const
+      }
+      setLogs(prev => [...prev.slice(-50), newLog]) // Keep last 50 logs
+
+      // Update hash rate randomly
+      setHashRate(prev => {
+        const change = (Math.random() - 0.5) * 2 // Random change between -1 and 1
+        return Math.max(0, prev + change)
+      })
+
+      // Auto scroll to bottom
       if (consoleRef.current) {
         consoleRef.current.scrollTop = consoleRef.current.scrollHeight
       }
-    }, 2000)
+
+      index++
+    }, 3000)
 
     return () => clearInterval(interval)
-  }
-
-  if (!hasActiveInvestment) {
-    return (
-      <div className="bg-gray-900 rounded-lg p-6 text-center">
-        <h2 className="text-white text-lg mb-2">Mining Console Inactive</h2>
-        <p className="text-gray-400">Start an investment to begin mining operations</p>
-      </div>
-    )
   }
 
   return (
@@ -74,13 +83,21 @@ export function MiningConsole() {
           </div>
         </div>
       </div>
+
       <div 
         ref={consoleRef}
-        className="h-64 overflow-y-auto font-mono text-sm text-green-400 bg-gray-950 p-4 rounded"
+        className="h-64 overflow-y-auto font-mono text-sm bg-gray-950 rounded p-4"
       >
         {logs.map((log, i) => (
-          <div key={i} className="py-1">
-            <span className="text-blue-400">[{new Date().toLocaleTimeString()}]</span> {log}
+          <div 
+            key={i} 
+            className={`py-1 ${
+              log.type === 'success' ? 'text-green-400' :
+              log.type === 'error' ? 'text-red-400' :
+              'text-gray-300'
+            }`}
+          >
+            <span className="text-blue-400">[{log.timestamp}]</span> {log.message}
           </div>
         ))}
       </div>
