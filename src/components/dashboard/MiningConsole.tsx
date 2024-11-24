@@ -1,74 +1,61 @@
 // src/components/dashboard/MiningConsole.tsx
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
-
-interface MiningLog {
-  timestamp: string
-  message: string
-  type: 'info' | 'success' | 'error'
-}
+import { useState, useEffect, useRef, useCallback } from 'react'
 
 export function MiningConsole() {
-  const [logs, setLogs] = useState<MiningLog[]>([])
+  const [logs, setLogs] = useState<Array<{message: string, timestamp: string}>>([])
   const [hashRate, setHashRate] = useState(0)
   const [isActive, setIsActive] = useState(false)
   const consoleRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout
-    
-    async function checkMiningStatus() {
+  const checkMiningStatus = useCallback(async () => {
+    try {
       const res = await fetch('/api/mining/status')
       const data = await res.json()
-      
-      if (data.active && !isActive) {
-        setIsActive(true)
-        startMining()
-      }
+      setIsActive(data.active)
+    } catch (error) {
+      console.error('Mining status check failed:', error)
     }
-
-    checkMiningStatus()
-    return () => clearInterval(interval)
   }, [])
 
-  function startMining() {
-    const miningMessages = [
-      'Initializing mining protocols...',
-      'Connecting to mining pool...',
-      'Verifying blockchain headers...',
-      'Starting hash computation...',
-      'Block candidate found...',
-      'Submitting proof of work...',
-      'Mining rewards calculated...',
-    ]
+  useEffect(() => {
+    checkMiningStatus()
 
-    let index = 0
-    const interval = setInterval(() => {
-      // Add new log
-      const newLog = {
-        timestamp: new Date().toLocaleTimeString(),
-        message: miningMessages[index % miningMessages.length],
-        type: 'info' as const
-      }
-      setLogs(prev => [...prev.slice(-50), newLog]) // Keep last 50 logs
+    if (isActive) {
+      const messages = [
+        'Initializing mining protocols...',
+        'Connecting to mining pool...',
+        'Verifying blockchain headers...',
+        'Starting hash computation...',
+        'Mining block #1234567...',
+        'Hash rate: 45.7 TH/s',
+        'Found new block candidate...',
+        'Validating solution...',
+      ]
 
-      // Update hash rate randomly
-      setHashRate(prev => {
-        const change = (Math.random() - 0.5) * 2 // Random change between -1 and 1
-        return Math.max(0, prev + change)
-      })
+      let index = 0
+      const interval = setInterval(() => {
+        setLogs(prev => [...prev.slice(-50), {
+          message: messages[index % messages.length],
+          timestamp: new Date().toLocaleTimeString()
+        }])
 
-      // Auto scroll to bottom
-      if (consoleRef.current) {
-        consoleRef.current.scrollTop = consoleRef.current.scrollHeight
-      }
+        setHashRate(prev => {
+          const change = (Math.random() - 0.5) * 2
+          return Math.max(0, prev + change)
+        })
 
-      index++
-    }, 3000)
+        if (consoleRef.current) {
+          consoleRef.current.scrollTop = consoleRef.current.scrollHeight
+        }
 
-    return () => clearInterval(interval)
-  }
+        index++
+      }, 2000)
+
+      return () => clearInterval(interval)
+    }
+  }, [isActive, checkMiningStatus])
 
   return (
     <div className="bg-gray-900 rounded-lg p-4">
@@ -83,20 +70,12 @@ export function MiningConsole() {
           </div>
         </div>
       </div>
-
       <div 
-  ref={consoleRef}
-  className="h-48 sm:h-64 overflow-y-auto font-mono text-xs sm:text-sm bg-gray-950 rounded p-2 sm:p-4"
->
+        ref={consoleRef}
+        className="h-64 overflow-y-auto font-mono text-sm bg-gray-950 rounded p-4"
+      >
         {logs.map((log, i) => (
-          <div 
-            key={i} 
-            className={`py-1 ${
-              log.type === 'success' ? 'text-green-400' :
-              log.type === 'error' ? 'text-red-400' :
-              'text-gray-300'
-            }`}
-          >
+          <div key={i} className="py-1 text-gray-300">
             <span className="text-blue-400">[{log.timestamp}]</span> {log.message}
           </div>
         ))}

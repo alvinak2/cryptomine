@@ -1,7 +1,7 @@
 // src/app/admin/payments/page.tsx
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
 
 interface Payment {
@@ -19,11 +19,7 @@ export default function PendingPayments() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
-  useEffect(() => {
-    fetchPendingPayments()
-  }, [])
-
-  async function fetchPendingPayments() {
+  const fetchPendingPayments = useCallback(async () => {
     try {
       const res = await fetch('/api/admin/payments/pending')
       if (!res.ok) throw new Error('Failed to fetch payments')
@@ -34,7 +30,13 @@ export default function PendingPayments() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    fetchPendingPayments()
+    const interval = setInterval(fetchPendingPayments, 30000)
+    return () => clearInterval(interval)
+  }, [fetchPendingPayments])
 
   async function handleVerification(id: string, status: 'approved' | 'rejected') {
     try {

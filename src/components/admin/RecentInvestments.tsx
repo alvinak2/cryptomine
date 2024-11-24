@@ -1,7 +1,7 @@
 // src/components/admin/RecentInvestments.tsx
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 interface Investment {
   _id: string
@@ -16,11 +16,7 @@ export function RecentInvestments() {
   const [investments, setInvestments] = useState<Investment[]>([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    fetchRecentInvestments()
-  }, [])
-
-  async function fetchRecentInvestments() {
+  const fetchInvestments = useCallback(async () => {
     try {
       const res = await fetch('/api/admin/investments/recent')
       if (!res.ok) throw new Error('Failed to fetch investments')
@@ -31,7 +27,14 @@ export function RecentInvestments() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    fetchInvestments()
+    // Refresh every 30 seconds
+    const interval = setInterval(fetchInvestments, 30000)
+    return () => clearInterval(interval)
+  }, [fetchInvestments])
 
   if (loading) return <div>Loading...</div>
 

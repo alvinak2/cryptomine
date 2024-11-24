@@ -1,7 +1,7 @@
 // src/components/dashboard/InvestmentCard.tsx
 'use client'
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { CalendarIcon, ArrowPathIcon } from '@heroicons/react/24/outline'
 import { INVESTMENT_PLANS } from '@/lib/constants'
 import { toast } from 'react-hot-toast'
@@ -18,7 +18,7 @@ interface InvestmentCardProps {
   }
 }
 
-export function InvestmentCard({ investment, onWithdraw }: InvestmentCardProps) {
+export function InvestmentCard({ investment, onUpdate }) {
   const [loading, setLoading] = useState(false)
 
   const getDuration = (plan: string) => {
@@ -33,7 +33,7 @@ export function InvestmentCard({ investment, onWithdraw }: InvestmentCardProps) 
   const remainingDays = Math.max(0, totalDays - elapsedDays)
   const isCompleted = remainingDays === 0 && investment.status === 'active'
 
-  async function handleWithdrawal() {
+  const handleWithdrawal = useCallback(async () => {
     if (!confirm('Are you sure you want to withdraw this investment?')) return
     
     setLoading(true)
@@ -43,17 +43,13 @@ export function InvestmentCard({ investment, onWithdraw }: InvestmentCardProps) 
       })
       
       if (!res.ok) throw new Error('Failed to withdraw')
-      
-      const data = await res.json()
-      toast.success(`Successfully withdrawn $${data.amount.toFixed(2)}`)
-      onWithdraw?.() // Callback to refresh dashboard data
+      onUpdate?.() // Callback to refresh parent data
     } catch (error) {
-      toast.error('Failed to process withdrawal')
       console.error('Withdrawal error:', error)
     } finally {
       setLoading(false)
     }
-  }
+  }, [investment._id, onUpdate])
 
   return (
     <div className="bg-white rounded-lg shadow p-6">
