@@ -16,12 +16,11 @@ export default function Navbar() {
 
   if (isLoading) {
     return (
-      <nav className="bg-gradient-to-r from-gray-900 to-gray-800 text-white shadow-lg">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex justify-between items-center">
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-blue-500 rounded-lg animate-pulse" />
-              <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600">
+      <nav className="bg-crypto-primary border-b border-gray-800">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center h-16">
+            <Link href="/" className="flex items-center">
+              <span className="text-xl font-bold bg-gradient-to-r from-crypto-bitcoin via-crypto-ethereum to-crypto-solana bg-clip-text text-transparent">
                 Mining Investment
               </span>
             </Link>
@@ -33,14 +32,14 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="bg-gradient-to-r from-gray-900 to-gray-800 text-white shadow-lg">
-      <div className="container mx-auto px-4 py-3">
-        <div className="flex justify-between items-center">
+    <nav className="bg-crypto-primary border-b border-gray-800">
+      <div className="container mx-auto px-4">
+        <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-crypto-bitcoin rounded-lg flex items-center justify-center">
               <span className="font-bold text-lg">M</span>
             </div>
-            <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600">
+            <span className="text-xl font-bold bg-gradient-to-r from-crypto-bitcoin via-crypto-ethereum to-crypto-solana bg-clip-text text-transparent">
               Mining Investment
             </span>
           </Link>

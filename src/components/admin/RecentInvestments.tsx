@@ -36,7 +36,7 @@ export function RecentInvestments() {
     return () => clearInterval(interval)
   }, [fetchInvestments])
 
-  if (loading) return <div>Loading...</div>
+  if (loading) return <div>Loading investments...</div>
 
   return (
     <div className="overflow-x-auto">

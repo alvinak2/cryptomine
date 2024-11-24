@@ -9,7 +9,7 @@ const INVESTMENT_PLANS = [
   { 
     name: 'Basic',
     min: 100,
-    duration: 30,
+    duration: 15,
     return: 50,
     features: [
       '$100 minimum investment',
@@ -21,7 +21,7 @@ const INVESTMENT_PLANS = [
   {
     name: 'Pro',
     min: 500,
-    duration: 20,
+    duration: 10,
     return: 50,
     features: [
       '$500 minimum investment',
@@ -33,7 +33,7 @@ const INVESTMENT_PLANS = [
   {
     name: 'Elite',
     min: 1000,
-    duration: 10,
+    duration: 5,
     return: 50,
     features: [
       '$1000 minimum investment',

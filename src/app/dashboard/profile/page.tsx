@@ -46,16 +46,16 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Profile Settings</h1>
+    <div className="max-w-2xl mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6 text-gray-300">Profile Settings</h1>
       
-      <div className="bg-white rounded-lg shadow p-6 mb-6">
+      <div className="bg-crypto-secondary text-gray-300 rounded-lg shadow p-6 mb-6">
         <h2 className="text-xl font-semibold mb-4">Account Information</h2>
         <p><strong>Name:</strong> {session?.user?.name}</p>
         <p><strong>Email:</strong> {session?.user?.email}</p>
       </div>
 
-      <div className="bg-white rounded-lg shadow p-6 mb-6">
+      <div className="bg-crypto-secondary text-gray-300 rounded-lg shadow p-6 mb-6">
         <h2 className="text-xl font-semibold mb-4">Change Password</h2>
         {message && (
           <div className="mb-4 p-3 bg-blue-50 text-blue-600 rounded">
@@ -64,35 +64,35 @@ export default function ProfilePage() {
         )}
         <form onSubmit={handlePasswordChange} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Current Password</label>
+            <label className="block text-sm font-medium mb-1 text-gray-300">Current Password</label>
             <input
               type="password"
               name="currentPassword"
               required
-              className="w-full border rounded p-2"
+              className="w-full border rounded p-2 bg-crypto-primary text-gray-300"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">New Password</label>
+            <label className="block text-sm font-medium mb-1 text-gray-300">New Password</label>
             <input
               type="password"
               name="newPassword"
               required
               minLength={6}
-              className="w-full border rounded p-2"
+              className="w-full border rounded p-2 bg-crypto-primary text-gray-300"
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            className="bg-crypto-success text-white px-4 py-2 rounded hover:bg-crypto-success/90"
           >
             {loading ? 'Updating...' : 'Update Password'}
           </button>
         </form>
       </div>
 
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-crypto-secondary text-gray-300 rounded-lg shadow p-6">
         <h2 className="text-xl font-semibold mb-4 text-red-600">Danger Zone</h2>
         <button
           onClick={handleAccountDeletion}

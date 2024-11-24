@@ -9,10 +9,20 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-      },
-    },
+        crypto: {
+          primary: '#1c1c28', // Dark background
+          secondary: '#2c2c3a', // Lighter background
+          bitcoin: '#f7931a',
+          ethereum: '#627eea',
+          usdt: '#26a17b',
+          solana: '#00ffbd',
+          accent: '#7b3fe4', // Purple accent
+          success: '#00f2ab',
+          warning: '#f2a900',
+          error: '#ff4b4b'
+        }
+      }
+    }
   },
   plugins: [],
 };

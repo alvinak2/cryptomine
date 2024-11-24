@@ -25,14 +25,13 @@ export async function GET(req: Request) {
       const planConfig = INVESTMENT_PLANS[inv.plan]
       const startDate = new Date(inv.startDate).getTime()
       const now = new Date().getTime()
-      const elapsedDays = Math.floor((now - startDate) / (1000 * 60 * 60 * 24))
-      const totalDays = planConfig.duration
-
-      // Calculate daily earnings
-      const dailyReturn = (inv.amount * (planConfig.return / 100)) / totalDays
-      // Calculate accumulated earnings based on elapsed days
-      const currentEarnings = dailyReturn * Math.min(elapsedDays, totalDays)
-
+      const elapsedDays = Math.min(
+        planConfig.duration,
+        (now - startDate) / (1000 * 60 * 60 * 24)
+      )
+      
+      const dailyReturnRate = (50 / planConfig.duration) / 100
+      const currentEarnings = inv.amount * dailyReturnRate * elapsedDays
       return sum + currentEarnings
     }, 0)
 

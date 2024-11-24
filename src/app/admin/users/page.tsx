@@ -73,90 +73,89 @@ export default function UsersManagement() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Users Management</h1>
+    <h1 className="text-2xl font-bold mb-6 text-gray-300">Users Management</h1>
 
-      {error && (
-        <div className="mb-4 p-4 bg-red-50 text-red-600 rounded-lg">
-          {error}
-        </div>
-      )}
-
-      <div className="mb-4">
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Search users..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border rounded-lg"
-          />
-          <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 absolute left-3 top-3" />
-        </div>
+    {error && (
+      <div className="mb-4 p-4 bg-red-50 text-red-600 rounded-lg">
+        {error}
       </div>
+    )}
 
-      <div className="overflow-x-auto -mx-4 sm:mx-0">
-  <div className="inline-block min-w-full align-middle">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th 
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer"
-                onClick={() => handleSort('name')}
-              >
-                <div className="flex items-center">
-                  Name
-                  {sortField === 'name' && (
-                    sortOrder === 'asc' ? <ChevronUpIcon className="h-4 w-4 ml-1" /> : 
-                    <ChevronDownIcon className="h-4 w-4 ml-1" />
-                  )}
-                </div>
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
-              <th 
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer"
-                onClick={() => handleSort('createdAt')}
-              >
-                <div className="flex items-center">
-                  Joined
-                  {sortField === 'createdAt' && (
-                    sortOrder === 'asc' ? <ChevronUpIcon className="h-4 w-4 ml-1" /> : 
-                    <ChevronDownIcon className="h-4 w-4 ml-1" />
-                  )}
-                </div>
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {loading ? (
+    <div className="mb-4">
+      <div className="relative">
+        <input
+          type="text"
+          placeholder="Search users..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full pl-10 pr-4 py-2 border rounded-lg bg-crypto-primary text-gray-300"
+        />
+        <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 absolute left-3 top-3" />
+      </div>
+    </div>
+    <div className="overflow-x-auto">
+        <div className="inline-block min-w-full align-middle">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-crypto-secondary">
               <tr>
-                <td colSpan={5} className="px-6 py-4 text-center">Loading...</td>
+                <th 
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase cursor-pointer"
+                  onClick={() => handleSort('name')}
+                >
+                  <div className="flex items-center">
+                    Name
+                    {sortField === 'name' && (
+                      sortOrder === 'asc' ? <ChevronUpIcon className="h-4 w-4 ml-1" /> : 
+                      <ChevronDownIcon className="h-4 w-4 ml-1" />
+                    )}
+                  </div>
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Email</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Role</th>
+                <th 
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase cursor-pointer"
+                  onClick={() => handleSort('createdAt')}
+                >
+                <div className="flex items-center">
+                    Joined
+                    {sortField === 'createdAt' && (
+                      sortOrder === 'asc' ? <ChevronUpIcon className="h-4 w-4 ml-1" /> : 
+                      <ChevronDownIcon className="h-4 w-4 ml-1" />
+                    )}
+                  </div>
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Actions</th>
               </tr>
-            ) : users.map((user: any) => (
-              <tr key={user._id}>
-                <td className="px-6 py-4">{user.name}</td>
-                <td className="px-6 py-4">{user.email}</td>
-                <td className="px-6 py-4">
-                  <span className={`px-2 py-1 rounded-full text-xs ${
-                    user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'
-                  }`}>
-                    {user.role}
-                  </span>
-                </td>
-                <td className="px-6 py-4">{new Date(user.createdAt).toLocaleDateString()}</td>
-                <td className="px-6 py-4">
-                  <button
-                    onClick={() => handleDelete(user._id)}
-                    className="text-red-600 hover:text-red-900 mr-2"
-                  >
-                    <TrashIcon className="h-5 w-5" />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="bg-crypto-primary divide-y divide-gray-700">
+              {loading ? (
+                <tr>
+                  <td colSpan={5} className="px-6 py-4 text-center text-gray-300">Loading...</td>
+                </tr>
+              ) : users.map((user: any) => (
+                <tr key={user._id}>
+                  <td className="px-6 py-4 text-gray-300">{user.name}</td>
+                  <td className="px-6 py-4 text-gray-300">{user.email}</td>
+                  <td className="px-6 py-4">
+                    <span className={`px-2 py-1 rounded-full text-xs ${
+                      user.role === 'admin' ? 'bg-crypto-ethereum bg-opacity-20 text-crypto-ethereum' : 'bg-gray-500 bg-opacity-20 text-gray-400'
+                    }`}>
+                      {user.role}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-gray-300">{new Date(user.createdAt).toLocaleDateString()}</td>
+                  <td className="px-6 py-4">
+                    <button
+                      onClick={() => handleDelete(user._id)}
+                      className="text-red-600 hover:text-red-900 mr-2"
+                    >
+                      <TrashIcon className="h-5 w-5" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -168,8 +167,8 @@ export default function UsersManagement() {
             onClick={() => setPage(pageNum)}
             className={`mx-1 px-4 py-2 rounded-md ${
               page === pageNum 
-                ? 'bg-blue-500 text-white' 
-                : 'bg-gray-100 hover:bg-gray-200'
+                ? 'bg-crypto-success text-white' 
+                : 'bg-crypto-secondary text-gray-300 hover:bg-crypto-secondary/90'
             }`}
           >
             {pageNum}

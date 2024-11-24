@@ -18,13 +18,13 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className="h-full">
-      <body className={`${inter.className} min-h-screen flex flex-col bg-gray-50`}>
+      <body className={`${inter.className} min-h-screen flex flex-col bg-crypto-primary`}>
         <SessionProvider>
           {!session && <Navbar />}
           <main className="flex-1">
             {children}
           </main>
-          <Footer />
+          {!session && <Footer />}
         </SessionProvider>
       </body>
     </html>

@@ -23,20 +23,20 @@ export default function AdminSettings() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Admin Settings</h1>
+      <h1 className="text-2xl font-bold mb-6 text-gray-300">Admin Settings</h1>
 
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-crypto-secondary text-gray-300 rounded-lg shadow p-6">
         <div className="space-y-6">
           {Object.entries(settings).map(([key, value]) => (
             <div key={key} className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-700">
+              <span className="text-sm font-medium text-gray-300">
                 {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
               </span>
               <Switch
                 checked={value}
                 onChange={(checked) => updateSetting(key, checked)}
                 className={`${
-                  value ? 'bg-blue-600' : 'bg-gray-200'
+                  value ? 'bg-crypto-success' : 'bg-gray-200'
                 } relative inline-flex h-6 w-11 items-center rounded-full`}
               >
                 <span className="sr-only">Enable {key}</span>

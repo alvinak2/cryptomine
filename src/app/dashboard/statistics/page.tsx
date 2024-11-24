@@ -15,6 +15,7 @@ import {
   ArcElement
 } from 'chart.js'
 import { StatCard } from '@/components/dashboard/StatCard'
+import { Doughnut, Line } from 'react-chartjs-2'
 
 ChartJS.register(
   CategoryScale,
@@ -99,41 +100,41 @@ export default function StatisticsPage() {
 
   return (
     <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold">Investment Statistics</h1>
+      <h1 className="text-2xl font-bold text-gray-300">Investment Statistics</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <StatCard
           title="Total Invested"
           value={`$${stats.totalInvested.toFixed(2)}`}
-          className="bg-blue-50"
+          className="bg-crypto-secondary"
         />
         <StatCard
           title="Total Returns"
           value={`$${stats.totalReturns.toFixed(2)}`}
-          className="bg-green-50"
+          className="bg-crypto-secondary"
         />
         <StatCard
           title="Active Investments"
           value={stats.activeInvestments}
-          className="bg-yellow-50"
+          className="bg-crypto-secondary"
         />
         <StatCard
           title="Mining Power"
           value={`${stats.miningPower.toFixed(2)} TH/s`}
-          className="bg-purple-50"
+          className="bg-crypto-secondary"
         />
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
-  <LineChart 
-    data={lineChartData} 
-    title="Monthly Returns" 
-  />
-  <DoughnutChart 
-    data={doughnutData} 
-    title="Investment Distribution" 
-  />
-</div>
+        <div className="bg-crypto-secondary p-6 rounded-lg shadow">
+          <h3 className="text-lg font-semibold mb-4 text-gray-300">Monthly Returns</h3>
+          <Line data={lineChartData} />
+        </div>
+        <div className="bg-crypto-secondary p-6 rounded-lg shadow">
+          <h3 className="text-lg font-semibold mb-4 text-gray-300">Investment Distribution</h3>
+          <Doughnut data={doughnutData} />
+        </div>
+      </div>
     </div>
   )
 }

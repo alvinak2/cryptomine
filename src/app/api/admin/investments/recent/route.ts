@@ -15,7 +15,7 @@ export async function GET(req: Request) {
     const investments = await Investment.find()
       .populate('userId', 'name email')
       .sort({ createdAt: -1 })
-      .limit(10)
+      .limit(4)
 
     const formattedInvestments = investments.map(inv => ({
       _id: inv._id,
