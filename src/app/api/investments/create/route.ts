@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { connectDB } from '@/lib/db'
 import { Investment } from '@/models/investment'
+import { INVESTMENT_PLANS } from '@/lib/constants'
 
 export async function POST(req: Request) {
   try {
@@ -24,6 +25,8 @@ export async function POST(req: Request) {
       plan,
       amount,
       status: 'pending',
+      startDate: new Date(),
+      endDate: new Date(Date.now() + INVESTMENT_PLANS[plan].duration * 24 * 60 * 60 * 1000), // Calculate based on plan duration
       paymentConfirmed: false,
       paymentVerified: false,
       createdAt: new Date()

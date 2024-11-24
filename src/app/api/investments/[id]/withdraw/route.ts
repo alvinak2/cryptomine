@@ -1,39 +1,42 @@
-// src/app/api/admin/investments/[id]/route.ts
+// src/app/api/investments/[id]/withdraw/route.ts
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { connectDB } from '@/lib/db'
 import { Investment } from '@/models/investment'
-import { INVESTMENT_PLANS } from '@/lib/constants'
 
-export async function PUT(
+export async function POST(
   req: Request,
   { params }: { params: { id: string } }
 ) {
   try {
     const session = await getServerSession(authOptions)
-    if (session?.user?.role !== 'admin') {
+    if (!session) {
       return new Response('Unauthorized', { status: 401 })
     }
 
-    const { status } = await req.json()
     await connectDB()
-
     
-    const investment = await Investment.findByIdAndUpdate(
-      params.id,
-      { 
-        status,
-        ...(status === 'active' ? {
-          startDate: new Date(),
-          endDate: new Date(Date.now() + (INVESTMENT_PLANS[investment.plan].duration) * 24 * 60 * 60 * 1000) // 30 days
-        } : {})
-      },
-      { new: true }
-    )
-
+    const investment = await Investment.findById(params.id)
     if (!investment) {
       return new Response('Investment not found', { status: 404 })
     }
+
+    // Verify ownership and status
+    if (investment.userId.toString() !== session.user.id || 
+        investment.status !== 'active') {
+      return new Response('Unauthorized', { status: 401 })
+    }
+
+    // Check if investment period is completed
+    const now = new Date()
+    const endDate = new Date(investment.endDate)
+    if (now < endDate) {
+      return new Response('Investment period not completed', { status: 400 })
+    }
+
+    // Update investment status
+    investment.status = 'completed'
+    await investment.save()
 
     return new Response(JSON.stringify(investment), {
       headers: { 'Content-Type': 'application/json' }

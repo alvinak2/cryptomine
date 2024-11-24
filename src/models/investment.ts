@@ -30,7 +30,7 @@ const investmentSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'active', 'completed', 'rejected'],
+    enum: ['pending', 'pending_verification', 'active', 'completed', 'rejected'],
     default: 'pending'
   },
   startDate: Date,

@@ -9,14 +9,15 @@ export async function POST(req: Request) {
     const session = await getServerSession(authOptions)
     if (!session) return new Response('Unauthorized', { status: 401 })
 
-    const { investmentId } = await req.json()
+    const { investmentId, paymentMethod } = await req.json()
     await connectDB()
 
     const investment = await Investment.findByIdAndUpdate(
       investmentId,
       { 
         paymentConfirmed: true,
-        status: 'pending_verification'
+        status: 'pending_verification',
+        paymentMethod // Save payment method
       },
       { new: true }
     )

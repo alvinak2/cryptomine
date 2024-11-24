@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { UserIcon, CurrencyDollarIcon, WalletIcon } from '@heroicons/react/24/outline'
 import { RecentUsers } from '@/components/admin/RecentUsers'
 import { PendingInvestments } from '@/components/admin/PendingInvestments'
+import { RecentInvestments } from '@/components/admin/RecentInvestments'
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -56,10 +57,10 @@ export default function AdminDashboard() {
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold mb-4">Recent Investments</h2>
-          <PendingInvestments />
-        </div>
+      <div className="bg-white rounded-lg shadow p-6">
+  <h2 className="text-lg font-semibold mb-4">Recent Investments</h2>
+  <RecentInvestments />
+</div>
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-lg font-semibold mb-4">New Users</h2>
           <RecentUsers />

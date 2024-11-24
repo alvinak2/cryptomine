@@ -1,12 +1,18 @@
 // src/app/api/auth/[...nextauth]/route.ts
-import NextAuth, { AuthOptions } from 'next-auth'
+import { AuthOptions } from 'next-auth'
+import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import bcrypt from 'bcryptjs'
 import { connectDB } from '@/lib/db'
 import { User } from '@/models/user'
+import NextAuth from 'next-auth'
 
 export const authOptions: AuthOptions = {
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
     CredentialsProvider({
       credentials: {
         email: { label: "Email", type: "email" },
@@ -39,7 +45,37 @@ export const authOptions: AuthOptions = {
     })
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async signIn({ user, account, profile }) {
+      if (account?.provider === 'google') {
+        try {
+          await connectDB()
+          const existingUser = await User.findOne({ email: user.email })
+
+          if (existingUser) {
+            // Update existing user with Google info if needed
+            return true
+          }
+
+          // Create new user from Google data
+          const newUser = await User.create({
+            name: user.name,
+            email: user.email,
+            role: 'user',
+            googleId: profile?.sub,
+            password: await bcrypt.hash(Math.random().toString(36), 10), // Random password for Google users
+            investments: [],
+            walletAddresses: {}
+          })
+
+          return true
+        } catch (error) {
+          console.error('Error during Google sign in:', error)
+          return false
+        }
+      }
+      return true
+    },
+    async jwt({ token, user, account }) {
       if (user) {
         token.role = user.role
         token.id = user.id
@@ -56,7 +92,6 @@ export const authOptions: AuthOptions = {
   },
   pages: {
     signIn: '/login',
-    signOut: '/login'
   },
   session: {
     strategy: 'jwt',
@@ -64,4 +99,4 @@ export const authOptions: AuthOptions = {
 }
 
 const handler = NextAuth(authOptions)
-export { handler as GET, handler as POST}
+export { handler as GET, handler as POST }

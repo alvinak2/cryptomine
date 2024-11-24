@@ -1,4 +1,4 @@
-// src/app/api/admin/payments/pending/route.ts
+// src/app/api/admin/investments/recent/route.ts
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { connectDB } from '@/lib/db'
@@ -12,30 +12,25 @@ export async function GET(req: Request) {
     }
 
     await connectDB()
+    const investments = await Investment.find()
+      .populate('userId', 'name email')
+      .sort({ createdAt: -1 })
+      .limit(10)
 
-    const pendingInvestments = await Investment.find({
-      status: 'pending_verification',
-      paymentConfirmed: true,
-      paymentVerified: false
-    })
-    .populate('userId', 'name email')
-    .sort({ createdAt: -1 })
-
-    const formatted = pendingInvestments.map(inv => ({
+    const formattedInvestments = investments.map(inv => ({
       _id: inv._id,
       userName: inv.userId.name,
       userEmail: inv.userId.email,
       plan: inv.plan,
       amount: inv.amount,
-      paymentMethod: inv.paymentMethod,
+      status: inv.status,
       createdAt: inv.createdAt
     }))
 
-    return new Response(JSON.stringify(formatted), {
+    return new Response(JSON.stringify(formattedInvestments), {
       headers: { 'Content-Type': 'application/json' }
     })
   } catch (error) {
-    console.error('Error fetching pending payments:', error)
     return new Response('Internal Server Error', { status: 500 })
   }
 }
