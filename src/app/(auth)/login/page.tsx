@@ -2,9 +2,10 @@
 'use client'
 
 import { useState } from 'react'
-import { signIn } from 'next-auth/react'
+import { getSession, signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function SignInPage() {
   const router = useRouter()
@@ -21,18 +22,28 @@ export default function SignInPage() {
     const email = formData.get('email') as string
     const password = formData.get('password') as string
 
-    const res = await signIn('credentials', {
-      redirect: false,
-      email,
-      password
-    })
+    try {
+      const res = await signIn("credentials", {
+        redirect: false,
+        email,
+        password,
+      });
 
-    if (res?.error) {
-      setError(res.error)
-    } else {
-      router.push('/dashboard')
+      if (res?.error) {
+        setError(res.error);
+      } else {
+        // Fetch the session to check the user's role
+        const session = await getSession();
+
+        if (session?.user?.role === "admin") {
+          router.push("/admin");
+        }
+      }
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false)
   }
 
   return (
@@ -100,11 +111,13 @@ export default function SignInPage() {
             onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
             className="mt-6 w-full flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
           >
-            <img
-              className="h-5 w-5 mr-2"
-              src="https://authjs.dev/img/providers/google.svg"
-              alt=""
-            />
+            <Image
+            src="https://authjs.dev/img/providers/google.svg"
+            alt="Google Logo"
+            width={20}
+            height={20}
+            className="mr-2"
+          />
             Sign in with Google
           </button>
         </div>

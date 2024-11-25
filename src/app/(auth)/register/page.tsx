@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function SignUpPage() {
   const router = useRouter()
@@ -108,11 +109,13 @@ export default function SignUpPage() {
             onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
             className="mt-6 w-full flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
           >
-            <img
-              className="h-5 w-5 mr-2"
-              src="https://authjs.dev/img/providers/google.svg"
-              alt=""
-            />
+            <Image
+            src="https://authjs.dev/img/providers/google.svg"
+            alt="Google Logo"
+            width={20}
+            height={20}
+            className="mr-2"
+          />
             Sign up with Google
           </button>
         </div>
