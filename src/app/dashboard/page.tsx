@@ -80,7 +80,7 @@ export default function Dashboard() {
     return () => clearInterval(dataInterval)
   }, [fetchData])
 
-  if (loading) return <div>Loading...</div>
+  if (loading) return <div className='text-gray-400'>Loading...</div>
 
   return (
     <div className="p-6 space-y-6">
@@ -110,9 +110,9 @@ export default function Dashboard() {
       {stats.hasActiveInvestment && <MiningConsole />}
 
       <div className="mt-8">
-        <h2 className="text-2xl font-bold mb-4">Your Investments</h2>
+        <h2 className="text-2xl font-bold mb-4 text-gray-400">Your Investments</h2>
         {loading ? (
-          <div>Loading investments...</div>
+          <div className='text-gray-400'>Loading investments...</div>
         ) : investments.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {investments.map((investment) => (

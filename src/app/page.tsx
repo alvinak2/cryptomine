@@ -1,96 +1,72 @@
+// src/app/page.tsx
+'use client'
+
+import Link from 'next/link'
+
 export default function Home() {
-  const plans = [
-    { name: 'Basic', min: 100, duration: 15, return: 50 },
-    { name: 'Pro', min: 500, duration: 10, return: 50 },
-    { name: 'Elite', min: 1000, duration: 5, return: 50 },
-  ];
-
   return (
-    <div className="container mx-auto px-4 mt-20 mb-12">
-      <div className="max-w-4xl mx-auto text-center space-y-8">
-        <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-crypto-bitcoin via-crypto-ethereum to-crypto-solana bg-clip-text text-transparent">
-          Mining Investment Platform
-        </h1>
-        <p className="text-xl text-gray-600">
-          Professional cryptocurrency mining investment solutions
-        </p>
+    <div className="container mx-auto px-4 py-8">
+      <section className="text-center mb-16">
+        <h1 className="text-4xl font-bold mb-4 text-gray-300">Welcome to Investopia</h1>
+        <p className="text-xl mb-8 text-gray-400">Your Gateway to Cryptocurrency Mining Investments</p>
+        <div className="flex justify-center space-x-4">
+          <Link href="/plans" className="bg-crypto-success hover:bg-crypto-success/90 text-white font-bold py-2 px-4 rounded">
+            View Plans
+          </Link>
+          <Link href="/about" className="bg-crypto-secondary hover:bg-crypto-secondary/90 text-crypto-success font-bold py-2 px-4 rounded border border-crypto-success">
+            Learn More
+          </Link>
+        </div>
+      </section>
 
-        <section className="grid md:grid-cols-3 gap-8 mt-12">
-          {plans.map((plan) => (
-            <article
-              key={plan.name}
-              aria-labelledby={`plan-${plan.name.toLowerCase()}`}
-              className="bg-crypto-primary text-gray-100 p-8 rounded-xl shadow-lg hover:shadow-crypto-accent/20 transition-shadow"
-            >
-              <h3
-                id={`plan-${plan.name.toLowerCase()}`}
-                className="text-2xl font-bold mb-4"
-              >
-                {plan.name}
-              </h3>
-              <div className="text-3xl font-bold text-blue-600 mb-6">
-                ${plan.min}
-                <span className="text-sm text-gray-500 font-normal"> minimum</span>
-              </div>
-              <ul className="space-y-3 text-left mb-8">
-                <li className="flex items-center">
-                  <svg
-                    className="w-5 h-5 mr-2 text-green-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  ${plan.min} minimum investment
-                </li>
-                <li className="flex items-center">
-                  <svg
-                    className="w-5 h-5 mr-2 text-green-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  {plan.duration} days duration
-                </li>
-                <li className="flex items-center">
-                  <svg
-                    className="w-5 h-5 mr-2 text-green-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  {plan.return}% return rate
-                </li>
-              </ul>
-              <div className="mt-4">
-                <button className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-colors">
-                  Invest Now
-                </button>
-              </div>
-            </article>
-          ))}
-        </section>
-      </div>
+      <section className="grid md:grid-cols-3 gap-8 mb-16">
+        <div className="bg-crypto-secondary text-gray-300 rounded-lg p-6 shadow-md">
+          <h2 className="text-2xl font-semibold mb-4">Easy Investment</h2>
+          <p>Start investing in cryptocurrency mining with just a few clicks. No technical knowledge required.</p>
+        </div>
+        <div className="bg-crypto-secondary text-gray-300 rounded-lg p-6 shadow-md">
+          <h2 className="text-2xl font-semibold mb-4">Secure Platform</h2>
+          <p>Your investments are protected by state-of-the-art security measures and encryption technologies.</p>
+        </div>
+        <div className="bg-crypto-secondary text-gray-300 rounded-lg p-6 shadow-md">
+          <h2 className="text-2xl font-semibold mb-4">High Returns</h2>
+          <p>Benefit from the potential of high returns in the growing cryptocurrency market.</p>
+        </div>
+      </section>
+
+      <section className="text-center mb-16">
+        <h2 className="text-3xl font-bold mb-4 text-gray-300">How It Works</h2>
+        <div className="grid md:grid-cols-4 gap-8">
+          <div>
+            <div className="bg-crypto-success text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl font-bold mx-auto mb-4">1</div>
+            <h3 className="text-xl font-semibold mb-2 text-gray-300">Sign Up</h3>
+            <p className="text-gray-400">Create your account in minutes</p>
+          </div>
+          <div>
+            <div className="bg-crypto-success text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl font-bold mx-auto mb-4">2</div>
+            <h3 className="text-xl font-semibold mb-2 text-gray-300">Choose a Plan</h3>
+            <p className="text-gray-400">Select an investment plan that suits you</p>
+          </div>
+          <div>
+            <div className="bg-crypto-success text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl font-bold mx-auto mb-4">3</div>
+            <h3 className="text-xl font-semibold mb-2 text-gray-300">Invest</h3>
+            <p className="text-gray-400">Make your investment using various payment methods</p>
+          </div>
+          <div>
+            <div className="bg-crypto-success text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl font-bold mx-auto mb-4">4</div>
+            <h3 className="text-xl font-semibold mb-2 text-gray-300">Earn</h3>
+            <p className="text-gray-400">Start earning returns on your investment</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="text-center">
+        <h2 className="text-3xl font-bold mb-4 text-gray-300">Ready to Start Mining?</h2>
+        <p className="text-xl mb-8 text-gray-400">Join thousands of investors already using Investopia</p>
+        <Link href="/register" className="bg-crypto-success hover:bg-crypto-success/90 text-white font-bold py-3 px-6 rounded text-lg">
+          Create Your Account Now
+        </Link>
+      </section>
     </div>
-  );
+  )
 }

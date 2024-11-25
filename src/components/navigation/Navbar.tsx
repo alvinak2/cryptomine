@@ -36,11 +36,11 @@ export default function Navbar() {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-crypto-bitcoin rounded-lg flex items-center justify-center">
-              <span className="font-bold text-lg">M</span>
+            <div className="w-8 h-8 bg-gradient-to-r from-crypto-bitcoin to-crypto-ethereum rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold">I</span>
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-crypto-bitcoin via-crypto-ethereum to-crypto-solana bg-clip-text text-transparent">
-              Mining Investment
+              Investopia
             </span>
           </Link>
 
@@ -49,13 +49,13 @@ export default function Navbar() {
               <>
                 <Link
                   href="/login"
-                  className="px-4 py-2 rounded-md hover:bg-gray-700 transition-all duration-200"
+                  className="px-4 py-2 rounded-md hover:bg-gray-700 transition-all duration-200 text-gray-500"
                 >
                   Login
                 </Link>
                 <Link
                   href="/register"
-                  className="px-4 py-2 rounded-md bg-blue-500 hover:bg-blue-600 transition-all duration-200"
+                  className="px-4 py-2 rounded-md bg-crypto-success/90 hover:bg-crypto-solana transition-all duration-200"
                 >
                   Register
                 </Link>
