@@ -34,7 +34,7 @@ export default function About() {
         <section className="text-center py-12 border-t border-crypto-secondary">
           <h2 className="text-3xl font-bold mb-6 text-gray-300">Join the Investopia Community</h2>
           <p className="text-xl mb-8 text-gray-400">Be part of the future of finance with CryptoMine</p>
-          <Link href="/signup" className="inline-block bg-crypto-success hover:bg-crypto-success/90 text-white font-bold py-3 px-8 rounded-lg text-lg transition-colors duration-300">
+          <Link href="/register" className="inline-block bg-crypto-success hover:bg-crypto-success/90 text-white font-bold py-3 px-8 rounded-lg text-lg transition-colors duration-300">
             Start Investing Now
           </Link>
         </section>
