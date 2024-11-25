@@ -17,7 +17,7 @@ import {
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
   { name: 'Investments', href: '/dashboard/investments', icon: BanknotesIcon },
-  { name: 'Mining Stats', href: '/dashboard/statistics', icon: ChartBarIcon },
+  { name: 'Statistics', href: '/dashboard/statistics', icon: ChartBarIcon },
   { name: 'Wallet', href: '/dashboard/wallet', icon: WalletIcon },
   { name: 'Profile', href: '/dashboard/profile', icon: UserIcon },
   { name: 'Settings', href: '/dashboard/settings', icon: Cog6ToothIcon },

@@ -18,6 +18,7 @@ const navigation = [
   { name: 'Users', href: '/admin/users', icon: UsersIcon },
   { name: 'Investments', href: '/admin/investments', icon: CurrencyDollarIcon },
   { name: 'Pending Payments', href: '/admin/payments', icon: BanknotesIcon },
+  { name: 'Withdrawals', href: '/admin/withdrawals', icon: CurrencyDollarIcon },
   { name: 'Wallets', href: '/admin/wallets', icon: WalletIcon },
   { name: 'Settings', href: '/admin/settings', icon: Cog6ToothIcon },
 ];
