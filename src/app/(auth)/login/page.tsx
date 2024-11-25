@@ -111,7 +111,7 @@ export default function SignInPage() {
 
         <p className="mt-4 text-center text-sm text-gray-600">
           Don't have an account?{' '}
-          <Link href="/auth/signup" className="text-crypto-success hover:text-crypto-success/90">
+          <Link href="/register" className="text-crypto-success hover:text-crypto-success/90">
             Sign up
           </Link>
         </p>
