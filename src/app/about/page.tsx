@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 export default function About() {
   return (
-    <div className="bg-crypto-primary text-gray-300 min-h-screen">
+    <div className="text-gray-300 min-h-screen">
       <div className="container mx-auto px-4 py-12">
         <h1 className="text-5xl font-bold mb-12 text-center text-gray-300">About CryptoMine</h1>
 
