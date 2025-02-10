@@ -1,26 +1,27 @@
-// src/middleware.ts
-// src/middleware.ts
-import { withAuth } from 'next-auth/middleware'
-import { NextResponse } from 'next/server'
+import { getToken } from "next-auth/jwt";
+import { NextRequest, NextResponse } from "next/server";
 
-export default withAuth(
-  function middleware(req) {
-    const token = req.nextauth.token
-    const isAdmin = token?.role === 'admin'
-    const path = req.nextUrl.pathname
+export async function middleware(req: NextRequest) {
+  const token = await getToken({ req, secret: process.env.AUTH_SECRET });
+  const url = req.nextUrl.pathname;
 
-    // Protect admin routes
-    if (path.startsWith('/admin') && !isAdmin) {
-      return NextResponse.redirect(new URL('/dashboard', req.url))
-    }
-  },
-  {
-    callbacks: {
-      authorized: ({ token }) => !!token
-    }
+  if (!token) {
+    return NextResponse.redirect(new URL("/login", req.url));
   }
-)
+
+  // Admin pages
+  if (url.startsWith("/admin") && token.role !== "admin") {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
+  }
+
+  // User pages
+  // if (url.startsWith("/dashboard") && token.role !== "user") {
+  //   return NextResponse.redirect(new URL("/admin", req.url));
+  // }
+
+  return NextResponse.next();
+}
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/admin/:path*']
-}
+  matcher: ["/admin/:path*", "/dashboard/:path*"],
+};

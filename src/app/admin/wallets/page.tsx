@@ -46,7 +46,7 @@ export default function WalletsManagement() {
       setEditingId(null)
       fetchWallets()
     } catch (error) {
-      setMessage({ type: 'error', text: error.message })
+      setMessage({ type: 'error', text: (error as Error).message })
     }
   }
 
@@ -67,7 +67,7 @@ export default function WalletsManagement() {
       setFormData({ ...formData, address: '' })
       fetchWallets()
     } catch (error) {
-      setMessage({ type: 'error', text: error.message })
+      setMessage({ type: 'error', text: (error as Error).message })
     }
   }
 

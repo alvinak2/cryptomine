@@ -15,7 +15,7 @@ export async function GET(req: Request) {
     await connectDB()
     
     // Get all active investments
-    const activeInvestments = await Investment.find({
+    const activeInvestments: Array<{ plan: keyof typeof INVESTMENT_PLANS; startDate: string; amount: number }> = await Investment.find({
       userId: session.user.id,
       status: 'active'
     })

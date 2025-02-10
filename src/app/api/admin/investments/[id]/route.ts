@@ -18,14 +18,18 @@ export async function PUT(
     const { status } = await req.json()
     await connectDB()
 
-    
-    const investment = await Investment.findByIdAndUpdate(
+    const investment: any = await Investment.findById(params.id)
+    if (!investment) {
+      return new Response('Investment not found', { status: 404 })
+    }
+
+    const updatedInvestment: any = await Investment.findByIdAndUpdate(
       params.id,
       { 
         status,
         ...(status === 'active' ? {
           startDate: new Date(),
-          endDate: new Date(Date.now() + (INVESTMENT_PLANS[investment.plan].duration) * 24 * 60 * 60 * 1000) // 30 days
+          endDate: new Date(Date.now() + (INVESTMENT_PLANS[investment.plan as keyof typeof INVESTMENT_PLANS].duration) * 24 * 60 * 60 * 1000) // 30 days
         } : {})
       },
       { new: true }

@@ -6,11 +6,19 @@ import { InvestmentModal } from '@/components/dashboard/InvestmentModal'
 import { InvestmentConfirmation } from '@/components/dashboard/InvestmentConfirmation'
 import { INVESTMENT_PLANS } from '@/lib/constants'
 
+type Plan = {
+  name: string;
+  min: number;
+  duration: number;
+  return: number;
+  features: string[];
+};
+
 export default function InvestmentsPage() {
-  const [selectedPlan, setSelectedPlan] = useState(null)
+  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null)
   const [showPaymentModal, setShowPaymentModal] = useState(false)
   const [currentInvestment, setCurrentInvestment] = useState(null)
-  const [hoveredPlan, setHoveredPlan] = useState(null)
+  const [hoveredPlan, setHoveredPlan] = useState<string | null>(null)
 
   const plans = [
     { 

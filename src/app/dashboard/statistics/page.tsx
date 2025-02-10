@@ -2,7 +2,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { LineChart, DoughnutChart } from '@/components/dashboard/Charts'
 import {
   Chart as ChartJS,
   CategoryScale,

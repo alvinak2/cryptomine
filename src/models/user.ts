@@ -23,6 +23,11 @@ const userSchema = new mongoose.Schema({
     default: 'user'
   },
   investments: [{
+    _Id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Investment',
+      required: true
+    },
     plan: {
       type: String,
       required: true,

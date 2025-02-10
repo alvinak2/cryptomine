@@ -1,73 +1,41 @@
 // src/app/api/admin/withdrawals/[id]/route.ts
-import { getServerSession } from 'next-auth/next'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
-import { connectDB } from '@/lib/db'
-import { Investment } from '@/models/investment'
-import { Transaction } from '@/models/transaction'
+import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { connectDB } from "@/lib/db";
+import {Withdrawal} from "@/models/withdrawal";
 
-export async function POST(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function POST(req: Request, { params }: { params: { id: string } }) {
+  const session = await getServerSession(authOptions);
+  if (!session || session.user.role !== "admin") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { id } = params;
+  const { status } = await req.json();
+
+  if (!id || !status) {
+    return NextResponse.json(
+      { error: "Missing required fields" },
+      { status: 400 }
+    );
+  }
+
   try {
-    const session = await getServerSession(authOptions)
-    if (session?.user?.role !== 'admin') {
-      return new Response('Unauthorized', { status: 401 })
-    }
+    await connectDB();
+    const update =
+      status === "approved" ? { status: "complete" } : { status: "rejected" };
+    await Withdrawal.findByIdAndUpdate(id, update);
 
-    const { status } = await req.json()
-    if (!['approved', 'rejected'].includes(status)) {
-      return new Response('Invalid status', { status: 400 })
-    }
-
-    await connectDB()
-
-    const investment = await Investment.findById(params.id)
-    if (!investment) {
-      return new Response('Investment not found', { status: 404 })
-    }
-
-    if (status === 'approved') {
-      // Calculate final returns based on plan rate
-      const returnRate = investment.plan === 'Basic' ? 50 :
-                        investment.plan === 'Pro' ? 50 : 50 // Elite
-      const totalReturn = investment.amount * (1 + returnRate / 100)
-
-      // Update investment status
-      investment.status = 'completed'
-      investment.withdrawalApproved = true
-      investment.withdrawalApprovedDate = new Date()
-      investment.returns = totalReturn - investment.amount
-      await investment.save()
-
-      // Record the transaction
-      await Transaction.create({
-        userId: investment.userId,
-        investmentId: investment._id,
-        type: 'withdrawal',
-        amount: totalReturn,
-        status: 'completed',
-        paymentMethod: investment.withdrawalMethod,
-        walletAddress: investment.withdrawalAddress,
-        createdAt: new Date()
-      })
-    } else {
-      // Reject withdrawal request
-      investment.withdrawalRequested = false
-      investment.withdrawalRejectedDate = new Date()
-      await investment.save()
-    }
-
-    return new Response(JSON.stringify({
-      success: true,
-      status,
-      investment
-    }), {
-      headers: { 'Content-Type': 'application/json' }
-    })
-
+    return NextResponse.json(
+      { message: "Withdrawal updated successfully" },
+      { status: 200 }
+    );
   } catch (error) {
-    console.error('Withdrawal approval error:', error)
-    return new Response('Internal Server Error', { status: 500 })
+    console.error("Error updating withdrawal:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }

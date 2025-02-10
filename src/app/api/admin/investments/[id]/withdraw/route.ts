@@ -39,8 +39,8 @@ export async function POST(
     }
 
     // Calculate final returns
-    const duration = INVESTMENT_PLANS[investment.plan].duration
-    const returnRate = INVESTMENT_PLANS[investment.plan].return
+    const plan = investment.plan as keyof typeof INVESTMENT_PLANS
+    const returnRate = INVESTMENT_PLANS[plan].return
     const totalReturn = investment.amount * (1 + returnRate/100)
 
     // Update investment status

@@ -1,11 +1,11 @@
 // src/app/api/auth/[...nextauth]/route.ts
-import { AuthOptions } from 'next-auth'
-import GoogleProvider from 'next-auth/providers/google'
-import CredentialsProvider from 'next-auth/providers/credentials'
-import bcrypt from 'bcryptjs'
-import { connectDB } from '@/lib/db'
-import { User } from '@/models/user'
-import NextAuth from 'next-auth'
+import { AuthOptions } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcryptjs";
+import { connectDB } from "@/lib/db";
+import { User } from "@/models/user";
+import NextAuth from "next-auth";
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -16,87 +16,63 @@ export const authOptions: AuthOptions = {
     CredentialsProvider({
       credentials: {
         email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" }
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          throw new Error('Please provide all required fields')
+          throw new Error("Please provide all required fields");
         }
 
-        await connectDB()
-        const user = await User.findOne({ email: credentials.email })
-        
+        await connectDB();
+        const user = await User.findOne({ email: credentials.email });
+
         if (!user) {
-          throw new Error('Invalid credentials')
+          throw new Error("Invalid credentials");
         }
 
-        const isValid = await bcrypt.compare(credentials.password, user.password)
+        const isValid = await bcrypt.compare(
+          credentials.password,
+          user.password
+        );
         if (!isValid) {
-          throw new Error('Invalid credentials')
+          throw new Error("Invalid credentials");
         }
 
         return {
           id: user._id.toString(),
           email: user.email,
           name: user.name,
-          role: user.role
-        }
-      }
-    })
+          role: user.role,
+        };
+      },
+    }),
   ],
   callbacks: {
-    async signIn({ user, account, profile }) {
-      if (account?.provider === 'google') {
-        try {
-          await connectDB()
-          const existingUser = await User.findOne({ email: user.email })
-
-          if (existingUser) {
-            // Update existing user with Google info if needed
-            return true
-          }
-
-          // Create new user from Google data
-          const newUser = await User.create({
-            name: user.name,
-            email: user.email,
-            role: 'user',
-            googleId: profile?.sub,
-            password: await bcrypt.hash(Math.random().toString(36), 10), // Random password for Google users
-            investments: [],
-            walletAddresses: {}
-          })
-
-          return true
-        } catch (error) {
-          console.error('Error during Google sign in:', error)
-          return false
-        }
-      }
-      return true
-    },
-    async jwt({ token, user, account }) {
+    async jwt({ token, user }) {
       if (user) {
-        token.role = user.role
-        token.id = user.id
+        token.role = user.role;
+        token.id = user.id;
       }
-      return token
+      return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.role = token.role
-        session.user.id = token.id
+        session.user.role = token.role as string;
+        session.user.id = token.id as string;
       }
-      return session
-    }
+      return session;
+    },
   },
+
+  secret: process.env.AUTH_SECRET,
+
   pages: {
-    signIn: '/login',
+    signIn: "/login",
   },
   session: {
-    strategy: 'jwt',
-  }
-}
+    strategy: "jwt",
+  },
+};
 
-const handler = NextAuth(authOptions)
-export { handler as GET, handler as POST }
+const handler = NextAuth(authOptions);
+export { handler as GET, handler as POST };

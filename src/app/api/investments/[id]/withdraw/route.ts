@@ -23,7 +23,7 @@ export async function POST(
       return new Response('Investment not found', { status: 404 })
     }
 
-    const planConfig = INVESTMENT_PLANS[investment.plan]
+    const planConfig = INVESTMENT_PLANS[investment.plan as keyof typeof INVESTMENT_PLANS]
     const startDate = new Date(investment.startDate)
     const now = new Date()
     const endDate = new Date(investment.endDate)

@@ -9,12 +9,12 @@ import { InvestmentConfirmation } from '@/components/dashboard/InvestmentConfirm
 export default function PlansPage() {
   const router = useRouter()
   const { data: session } = useSession()
-  const [hoveredPlan, setHoveredPlan] = useState(null)
-  const [selectedPlan, setSelectedPlan] = useState(null)
+  const [hoveredPlan, setHoveredPlan] = useState<string | null>(null)
+  const [selectedPlan, setSelectedPlan] = useState<{ name: string; min: number; duration: number; return: number; features: string[] } | null>(null)
   const [showPaymentModal, setShowPaymentModal] = useState(false)
   const [currentInvestment, setCurrentInvestment] = useState(null)
 
-  function handleInvestNow(plan) {
+  function handleInvestNow(plan: { name: string; min: number; duration: number; return: number; features: string[] }) {
     if (!session) {
       router.push('/login')
     } else {

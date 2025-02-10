@@ -41,7 +41,7 @@ export default function UsersManagement() {
       const data = await res.json()
       setUsers(data.users)
       setTotalPages(data.totalPages)
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message)
     } finally {
       setLoading(false)
@@ -57,7 +57,7 @@ export default function UsersManagement() {
       })
       if (!res.ok) throw new Error('Failed to delete user')
       fetchUsers()
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message)
     }
   }
